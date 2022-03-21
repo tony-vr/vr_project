@@ -19,7 +19,8 @@ namespace Learnproject
 
         public Vector3 _direction;
         public float speed = 2f;
-        private bool _isSprint;
+        public float speedRotate = 20f;
+
 
 
 
@@ -40,7 +41,7 @@ namespace Learnproject
             _direction.x = Input.GetAxis("Horizontal");
             _direction.z = Input.GetAxis("Vertical");
 
-            _isSprint = Input.GetButton("Sprint");
+
         }
 
 
@@ -53,8 +54,10 @@ namespace Learnproject
                 SpawnShield();
             }
             Move(Time.fixedDeltaTime);
-        }
 
+            transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X")* speedRotate, 0));
+        }
+         
         private void SpawnShield()
         {
             var shieldObj = Instantiate(ShieldPrefab, spawnPosition.position, spawnPosition.rotation);
@@ -78,14 +81,15 @@ namespace Learnproject
         IEnumerator EnemySpawn()
         {
             yield return new WaitForSeconds(3);
-            Instantiate(Enemy, spawnEnemy.position, spawnEnemy.rotation);
+            Instantiate(Enemy, spawnEnemy.position, Quaternion.identity);
             Repeat();
         }
 
 
         private void Move(float delta)
         {
-            transform.position += _direction.normalized * (_isSprint ? speed * 20 : speed) * delta;
+            var fixedDirection = transform.TransformDirection(_direction.normalized); 
+            transform.position += fixedDirection * speed * delta;
         }
            
 

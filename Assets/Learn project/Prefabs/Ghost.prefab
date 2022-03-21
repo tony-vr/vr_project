@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: -1571577519953498580}
   m_Layer: 0
   m_Name: Ghost
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -254,9 +254,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b559dd12a5619445b30cd737881d16a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
   _bulletPrefab: {fileID: 8201423917796502766, guid: c817002290f362c4b892b58e1ae6ce69,
     type: 3}
-  spawnPosition: {fileID: 75184705688985730}
+  _spawnPosition: {fileID: 0}
+  spawnEnemy: {fileID: 75184705688985730}
 --- !u!54 &305098309361237603
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -281,7 +283,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3447980650941183486}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
