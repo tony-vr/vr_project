@@ -38,7 +38,6 @@ namespace Learnproject
         
         void OnTriggerEnter(Collider other)
         {
-            print(other.gameObject.name);
             dir = !dir;
         }
 

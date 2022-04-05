@@ -12,6 +12,9 @@ namespace Learnproject
         public int count = 0;
         private bool _isOpen = false;
 
+        //счетчик нажатых кнопок
+        public Text buttonsText;
+
         //когда нажаты 6 кнопок, то дверь открывается
         private void Update()
         {            
@@ -19,6 +22,8 @@ namespace Learnproject
             {
                 OpenDoor();                
             }
+
+            buttonsText.text = count.ToString();
         }
 
         public void OpenDoor()

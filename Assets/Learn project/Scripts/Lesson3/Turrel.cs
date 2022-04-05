@@ -24,6 +24,9 @@ namespace Learnproject
         
         void Update()
         {
+            Ray ray = new Ray(_spawnPosition.position, transform.forward);
+            Debug.DrawRay(_spawnPosition.position, transform.forward * 6, Color.blue);
+
             if (Vector3.Distance(transform.position, _player.transform.position) < 10)
             {
                 var direction = _player.transform.position - transform.position;
