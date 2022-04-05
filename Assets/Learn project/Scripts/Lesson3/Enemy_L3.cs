@@ -77,7 +77,6 @@ namespace Learnproject
                 StartCoroutine(Stop());
                 
             }
-
             DrawViewState();
             Debug.DrawRay(EnemyEye.position, EnemyEye.forward * ViewDistance, Color.blue);
 
