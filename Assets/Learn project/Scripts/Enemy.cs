@@ -7,7 +7,7 @@ namespace Learnproject
 
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] private Player _player;
+        [SerializeField] private Player_L3 _player;
         [SerializeField] private GameObject _bulletPrefab;
         [SerializeField] private Transform _spawnPosition; 
         private bool dir = true;
@@ -15,7 +15,7 @@ namespace Learnproject
 
         void Start()
         {
-            _player = FindObjectOfType<Player>();
+            _player = FindObjectOfType<Player_L3>();
 
         }
 
@@ -53,6 +53,7 @@ namespace Learnproject
             var bul = bulletObj.GetComponent<Bullet_Enemy>();
             bul.Init(_player.transform, 10, 0.05f);
         }
+
 
 
     }

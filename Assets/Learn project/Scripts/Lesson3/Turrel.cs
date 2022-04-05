@@ -14,6 +14,8 @@ namespace Learnproject
 
         private float timeBwShots;
         public float startTimeBwShots;
+        private bool _isfire = true;
+
 
         void Start()
         {            
@@ -37,15 +39,38 @@ namespace Learnproject
             if (Vector3.Distance(transform.position, _player.transform.position) < 6 && timeBwShots <= 0)
             {
                 //Начинаю стрельбу
-                var bulletObj = Instantiate(_bulletPrefab, _spawnPosition.position, _spawnPosition.rotation);
-                var bul = bulletObj.GetComponent<Bullet_Enemy>();
-                bul.Init(_player.transform, 10, 0.05f);
-                timeBwShots = startTimeBwShots;
+                //var bulletObj = Instantiate(_bulletPrefab, _spawnPosition.position, _spawnPosition.rotation);
+                //var bul = bulletObj.GetComponent<Bullet_Enemy>();
+                //bul.Init(_player.transform, 10, 0.05f);
+                //timeBwShots = startTimeBwShots;
+
+                if (_isfire)
+                    Repeat_Fire();
             }
             else
             {
                 timeBwShots -= Time.deltaTime;
             }
-        }        
+        }
+
+        private IEnumerator Fire()
+        {
+            Debug.Log("Fire");
+
+            
+
+            var bulletObj = Instantiate(_bulletPrefab, _spawnPosition.position, _spawnPosition.rotation);
+            var bullet = bulletObj.GetComponent<Bullet>();
+            bullet.Init(_player.transform);
+            yield return new WaitForSeconds(1f);
+            _isfire = true;
+
+        }
+
+        private void Repeat_Fire()
+        {
+            _isfire = false;
+            StartCoroutine(Fire());
+        }
     }
 }

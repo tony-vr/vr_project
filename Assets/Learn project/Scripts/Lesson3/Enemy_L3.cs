@@ -21,13 +21,13 @@ namespace Learnproject
         public Transform Target;//позиция игрока, которую будет преследовать объект
         [Range(0, 360)] public float ViewAngle = 90f;
         public Transform EnemyEye;
-        public float ViewDistance = 15f;       
+        public float ViewDistance = 15f;
         private bool _isDetected = false;//означает, что противник преследует игрока в данный момент
-        [SerializeField] private GameObject _bulletPrefab;
+
 
         //пули
         public GameObject Bullet;
-        public Transform spawnBullet;
+        private bool _isfire = true;
 
 
         void Awake()
@@ -44,14 +44,14 @@ namespace Learnproject
 
         //метод обнаружения игрока в поле видимости
         private bool IsInView() // true если цель видна
-        {            
+        {
             float realAngle = Vector3.Angle(EnemyEye.forward, Target.position - EnemyEye.position);
-            
-                if (realAngle < ViewAngle / 2f && Vector3.Distance(EnemyEye.position, Target.position) <= ViewDistance)
-                {
-                return true;                   
-                }
-            
+
+            if (realAngle < ViewAngle / 2f && Vector3.Distance(EnemyEye.position, Target.position) <= ViewDistance)
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -61,21 +61,22 @@ namespace Learnproject
             {
                 Waypoint();
             }
-            
+
             if (IsInView() is true)
             {
                 _isDetected = true;
                 Debug.Log("detected");
                 MoveToTarget();
-                Fire();
+                if (_isfire)
+                    Repeat_Fire();
             }
 
             //если игрок вышел из зоны видимости
-            if ( !IsInView() && _isDetected is true)
+            if (!IsInView() && _isDetected is true)
             {
                 Debug.Log("undetected");
                 StartCoroutine(Stop());
-                
+
             }
 
             DrawViewState();
@@ -83,10 +84,10 @@ namespace Learnproject
 
         }
 
-        
-        private void MoveToTarget() 
+
+        private void MoveToTarget()
         {
-            _agent.SetDestination(Target.position);            
+            _agent.SetDestination(Target.position);
         }
 
         private void Waypoint()
@@ -115,11 +116,24 @@ namespace Learnproject
             Debug.DrawLine(EnemyEye.position, right, Color.yellow);
         }
 
-        private void Fire()
+
+
+        private IEnumerator Fire()
         {
-            var bulletObj = Instantiate(Bullet, spawnBullet.position, Quaternion.Euler(-10, 0, 0));
+            Debug.Log("Fire");
+            var bulletObj = Instantiate(Bullet, EnemyEye.position, EnemyEye.rotation);
             var bullet = bulletObj.GetComponent<Bullet>();
-            bullet.Init(spawnBullet);
+            bullet.Init(_player.transform);
+            yield return new WaitForSeconds(1f);
+            _isfire = true;
+            
         }
+
+        private void Repeat_Fire ()
+        {
+            _isfire = false;            
+            StartCoroutine(Fire());
+        }
+            
     }
 }
