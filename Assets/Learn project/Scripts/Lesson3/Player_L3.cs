@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Learnproject
 {
@@ -9,6 +10,13 @@ namespace Learnproject
         //переменные дл€ движени€
         public Vector3 _direction;
         public float speed = 5f;
+        public float speedRotate = 20f;
+
+
+
+        //переменна€ дл€ прыжка
+        [SerializeField] private float _jumpForce = 10f;
+
 
         //переменные дл€ бомбы
         public GameObject BombPrefab;
@@ -24,30 +32,57 @@ namespace Learnproject
         //счетчик пуль
         public int bulletCount;
 
+        
+
         private void Start()
         {
-            bombCount = 3;
-            bulletCount = 5;
+            bombCount = 20;
+            bulletCount = 50;
+
         }
 
         void Update()
-        {          
+        {                    
             //установка бомбы
             if (Input.GetMouseButtonDown(1) && bombCount > 0)
             {
                 Instantiate(BombPrefab, spawnBomb.position, spawnBomb.rotation);
-                bombCount--;//убавл€ю бомбу из запасов
-                Debug.Log(bombCount);
+                bombCount--;//убавл€ю бомбу из запасов                
             }
 
+            
             //стрельба
             if (Input.GetMouseButtonDown(0) && bulletCount > 0)
             {
                 //Ќачинаю стрельбу
-                Instantiate(Bullet, spawnBullet.position, spawnBullet.rotation);
+                Fire();
                 bulletCount--;
-                Debug.Log(bulletCount);
-            }    
+            }
+
+            //прыжок
+            if (Input.GetKeyDown(KeyCode.Space))
+                GetComponent<Rigidbody>().AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+
+            //тестовый взрыв
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                ExplosionDamage();
+            }            
+        }
+
+        //тестовый взрыв
+        void ExplosionDamage()
+        {
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, 3);
+            foreach (var hitCollider in hitColliders)
+            {
+                Rigidbody rb = hitCollider.GetComponent<Rigidbody>();
+                if (rb != null)
+                {                  
+                    rb.AddForce((hitCollider.transform.position - transform.position) * 500);
+                }
+
+            }
         }
 
         void FixedUpdate()
@@ -62,8 +97,19 @@ namespace Learnproject
             transform.position += fixedDirection * speed * delta;
 
             //движение
-            _direction.x = Input.GetAxis("Horizontal");
             _direction.z = Input.GetAxis("Vertical");
-        }        
+            _direction.x = Input.GetAxis("Horizontal");
+            transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * speedRotate, 0));
+
+            //поворот
+            //transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * _speed_rotate * Time.deltaTime);
+        }
+
+        private void Fire()
+        {
+            var bulletObj = Instantiate(Bullet, spawnBullet.position, Quaternion.Euler(-45,0,0));
+            var bullet = bulletObj.GetComponent<Bullet>();
+            bullet.Init(spawnBullet);
+        }    
     }
 }

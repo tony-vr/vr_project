@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Bomb
   - MoveTag
+  - Button_Cube
   layers:
   - Default
   - TransparentFX
